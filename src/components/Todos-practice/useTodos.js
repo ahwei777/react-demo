@@ -15,7 +15,7 @@ export default function useTodos() {
 
   // 只有初始化時要取出資料，但後續 render 時都還是會執行造成效能浪費，改為傳入函式就只會執行一次
   const [todos, setTodos] = useState(() => {
-    console.log('todos init')
+    console.log('init')
     let todoData = window.localStorage.getItem('todos') //初始空值錯誤處理(null)
     if (todoData) {
       todoData = JSON.parse(todoData);
@@ -27,26 +27,17 @@ export default function useTodos() {
     return todoData;
   });
 
-  const [todosFilter, setTodosFilter] = useState(null);
-  const [updatingTodo, setUpdatingTodo] = useState(null);
-  const [updateValue, setUpdateValue] = useState(null)
-
-  // useEffect 第一個參數為函式，當第二個參數關注目標改變時才會執行(傳入[]時因不會改變故只在第一次 render 後執行，如 call API)
-
-  // 關注 todos，改變時就執行函式(含初始化)
+  // useEffect 第一個參數為每次 render (改變 state)後都執行的函式，第二個參數為關注的資料，當改變時才會執行函式
+  // 當第二個參數傳入空陣列時，因為不會改變故只會在第一次 render 結束後會執行，例如 call API 等
   useEffect(() => {
     writeTodosToLocalStorage(todos)
     console.log("useEffect: todos", JSON.stringify(todos))
-    // (return clean up function)
-  }, [todos])
 
-  // 關注 updatingTodo，改變時就執行函式(含初始化)
-  useEffect(() => {
-    console.log("useEffect: updatingTodo", updatingTodo)
-    if (updatingTodo) {
-      document.querySelector(".editing").focus();
+    //clean up function 
+    return () => {
+      console.log("clearEffect: todos", JSON.stringify(todos))
     }
-  }, [updatingTodo])
+  }, [todos]) // 關注 todos，只要其改變時就會執行函式(包含第一次)
 
   const handleButtonAddTodo = useCallback(() => {
     console.log("button click!");
@@ -72,7 +63,6 @@ export default function useTodos() {
   const handleToggleIsDone = (id) => {
     setTodos(
       todos.map((todo) => { 
-        // 不符合指定刪除 ID 的保留
         if (todo.id !== id) return todo;
         return {
           ...todo,
@@ -81,31 +71,6 @@ export default function useTodos() {
       })
     );
   };
-  const handleUpdateClick = (e) => {
-    setUpdateValue(e.target.innerText);
-    setUpdatingTodo({
-      id: e.target.getAttribute("data-todo-id")
-    })
-  }
-
-  const handleUpdateChange = (e) => {
-    setUpdateValue(e.target.value);
-    setTodos(
-      todos.map((todo) => { 
-        // 不符合指定刪除 ID 的保留
-        if (todo.id !== Number(e.target.getAttribute("data-todo-id"))) return todo;
-        return {
-          ...todo,
-          content: e.target.value,
-        };
-      })
-    );
-  }
-
-  const handleClearDoneTodos = useCallback(() => {
-    // 未完成的才保留
-    setTodos(todos.filter((todo) => !todo.isDone));
-  }, [todos]);
 
   //回傳打包好的函式與需要變數
   return {
@@ -115,15 +80,8 @@ export default function useTodos() {
     handleButtonAddTodo,
     handleDeleteTodo,
     handleToggleIsDone,
-    handleUpdateClick,
-    updatingTodo,
-    setUpdatingTodo,
-    updateValue,
-    handleUpdateChange,
     value,
+    setValue,
     handleInputChange,
-    todosFilter,
-    setTodosFilter,
-    handleClearDoneTodos
   };
 }

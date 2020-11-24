@@ -1,0 +1,133 @@
+/*  表單外背景底色  */
+body {
+  background: rgb(209, 206, 206);
+}
+/*  表單大框架  */
+.form__wrapper {
+  padding: 54px 5px 35px 40px;
+  border-top: solid 6px #fad312;;
+  background-color: white;
+  margin:120px auto 66px auto;
+  max-width: 645px;
+  box-shadow: 1.8px 2.4px 5px 0 rgba(0, 0, 0, 0.3);
+}
+/*  表單大標題  */
+.form__title {
+  font-family: MicrosoftJhengHei;
+  font-size: 36px;
+  font-weight: bold;
+}
+/*  表單非標題內文  */
+.form__info {
+  font-family: MicrosoftJhengHei;
+  font-size: 14px;
+  line-height: 11px;
+}
+/*  表單必填提醒  */
+.form__notice {
+  font-family: MicrosoftJhengHei;
+  font-size: 28px;
+  color: #e74149;
+  margin-top: 22px;
+  margin-bottom: 25px;
+}
+/*  各區塊間隔  */
+.input-block + .input-block {
+  margin-top: 50px;
+}
+/*  必填項目標題後加上'*'  */
+.required .input-block__title:after {
+  content: ' *';
+  color: #e74149;
+  font-family: MicrosoftJhengHei;
+  font-size: 20px;
+}
+/*  各子標題  */
+.input-block__title {
+  font-family: MicrosoftJhengHei;
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+/*  輸入欄位格式  */
+.placebar {
+  width: 287px;
+  height: 23px;
+  border: solid 1px #d0d0d0;
+  font-family: MicrosoftJhengHei;
+  font-size: 16px;
+  color: #afafaf;
+  border: rgb(122, 211, 238) 1px solid;
+}
+.placebar:-ms-keyboard-active {
+  transform: scale(1.2);
+}
+/*  輸入欄位描述  */
+.input-block__desc {
+  font-size: 14px;
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+/*  勾選選項格式  */
+.input-block label {
+  display: block;
+  font-size: 14px;
+  margin-top: 25px;
+}
+/*  按鈕區域  */
+.buttons__block input {
+  cursor: pointer;
+  display: inline-block;
+  border:none;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 15px 30px;
+  margin-top: 68px;
+  margin-bottom: 21px;
+}
+.buttons__block-save {
+  border: none;
+  background-color: #c8c7c1;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 15px 30px;
+  margin-top: 68px;
+  margin-bottom: 21px;
+  cursor: pointer;
+}
+/*  提交按鈕  */
+.buttons__block-summit {
+  border: none;
+  background-color: #fad312;
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 15px 30px;
+  margin-left: 20px;
+  font-weight: bold;
+}
+/*  尾端資訊列  */
+.footer {
+  border-top: solid 3px #fad312;;
+  height: 60px;
+  background-color: #000000;
+  font-family: MicrosoftJhengHei;
+  font-size: 13px;
+  color: #999999;
+  text-align: center;
+  line-height: 60px;
+}
+/*  錯誤提示訊息  */
+.input-block__error {
+  color: #e74149;
+  font-family: MicrosoftJhengHei;
+  font-size: 20px;
+  margin-top: 5px;
+  position: absolute;
+}
+.hide-error .input-block__error {
+  visibility: hidden;
+}
+/*  RWD 設計  */
+@media(max-width: 768px) {
+
+}

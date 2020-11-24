@@ -1,0 +1,75 @@
+/* 整體背景色 */
+body {
+  background: lightblue;
+}
+/* 下棋順序及勝利提示 */
+.game-status {
+  margin: 12px auto;
+  font-size: 36px;
+  font-weight: bold;
+  color: brown;
+  text-align: center;
+}
+/* 下棋位置區塊 */
+.game-board {
+  display: flex;
+  justify-content: center;
+}
+/* 下棋區域 wrapper */
+.stones-wrapper {
+  display: inline-flex;
+  position: relative;
+  background: wheat;
+}
+/* 各棋子樣式 */
+.stone {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+.stone:hover {
+  cursor: pointer;
+  border: tomato 1px dashed;
+}
+/* 棋盤 wrapper */
+.squares-background-wrapper {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+/* 各棋盤格子樣式 */
+.square-background {
+  background: wheat;
+  border: 1px solid grey;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+/* 點個眼睛玩玩 */
+.board-row:nth-child(6n + 3) .square-background:nth-child(6n + 3)::after {
+  position: absolute;
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: black;
+  z-index: 1;
+  top: -1px;
+  left: -1px;
+  transform: translate(16px, 16px);
+}
+/* 棋譜紀錄 bar */
+.pagination {
+  margin: 10px 30px;
+  flex-wrap: wrap;
+  overflow: auto;
+}
+.page-link:focus {
+  box-shadow: none;
+}

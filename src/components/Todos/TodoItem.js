@@ -2,6 +2,8 @@ import React from 'react';
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
+import { Button } from 'react-bootstrap';
+
 const TodoItemWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -15,92 +17,44 @@ const TodoItemWrapper = styled.div`
 `;
 
 const TodoContent = styled.div`
-  color: blue;
-  font-size: ${(props) => (props.size === "XL" ? "20px;" : "12px;")}
-    ${(props) =>
-      props.$isDone &&
-      `
-    text-decoration: line-through;
-  `};
+  margin-right: 16px;
+  word-break: break-word;
+  padding: 6px;
+  border: none;
+  font-size: 26px;
+  flex: 1;
+  ${(props) =>
+    props.$isDone && `text-decoration: line-through;`
+  }
+`;
+const TodoContentEditing = styled.input`
+  margin-right: 16px;
+  word-break: break-word;
+  padding: 6px;
+  border: none;
+  font-size: 26px;
+  flex: 1;
+  ${(props) =>
+    props.$isDone && `text-decoration: line-through;`
+  }
+  
+  outline: 1px solid grey;
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const TodoButtonWrapper = styled.div``;
 
-const Button = styled.button`
-  padding: 4px;
-  color: black;
-
-  &:hover {
-    transform: scale(1.2);
-  }
-
-  & + & {
-    margin-left: 10px;
-  }
-`;
-
-// restyle - 繼承原屬後再額外傳入 className
-const RedButton = styled(Button)`
-  color: red;
-`;
-
-/*
-class TodoItemC extends React.Component {
-  // 初始化建構子
-  constructor(props) {
-    // 繼承父類 React.Component 
-    super(props)
-    // 強制綁定函式的 this 為 TodoItemC 這個 instance，使用時才能正確地指向 props
-    this.handleToggleClick = this.handleToggleClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
-  }
-
-  // 宣告會用到的函式
-  handleToggleClick() {
-    console.log(this) // undefined
-    const { handleToggleIsDone, todo } = this.props
-    handleToggleIsDone(todo.id);
-  }
-
-  handleDeleteClick() {
-    const { handleDeleteTodo, todo } = this.props
-    handleDeleteTodo(todo.id);
-  }
-
-  render() {
-    console.log('render todo')
-    const {
-      className,
-      size,
-      todo,
-      handleDeleteTodo,
-      handleToggleIsDone,
-    } = this.props;
-
-    return (
-      <TodoItemWrapper className={className} data-todo-id={todo.id}>
-        <TodoContent $isDone={todo.isDone} size={size}>
-          {todo.content}
-        </TodoContent>
-        <TodoButtonWrapper>
-          <Button onClick={this.handleToggleClick}>
-            {todo.isDone ? "未完成" : "已完成"}
-          </Button>
-          <RedButton onClick={this.handleDeleteClick}>刪除</RedButton>
-        </TodoButtonWrapper>
-      </TodoItemWrapper>
-    )
-  }
-} 
-*/
-
 // 合併包成完整的 component，設定參數傳入位置
 const TodoItem = ({
   className,
-  size,
   todo,
   handleDeleteTodo,
   handleToggleIsDone,
+  updatingTodo,
+  setUpdatingTodo,
+  handleUpdateClick,
+  updateValue,
+  handleUpdateChange,
 }) => {
   const handleToggleClick = () => {
     handleToggleIsDone(todo.id);
@@ -108,16 +62,24 @@ const TodoItem = ({
   const handleDeleteClick = () => {
     handleDeleteTodo(todo.id);
   };
+
   return (
     <TodoItemWrapper className={className} data-todo-id={todo.id}>
-      <TodoContent $isDone={todo.isDone} size={size}>
-        {todo.content}
-      </TodoContent>
+      {(updatingTodo && Number(updatingTodo.id) === todo.id)
+      ?
+        (<TodoContentEditing $isDone={todo.isDone} onDoubleClick={handleUpdateClick} data-todo-id={todo.id} value={updateValue} onChange={handleUpdateChange} onBlur={() => {setUpdatingTodo(false)}} className={"editing"}>
+        </TodoContentEditing>)
+      :
+        (<TodoContent $isDone={todo.isDone} onDoubleClick={handleUpdateClick} data-todo-id={todo.id}>
+          {todo.content}
+        </TodoContent>)
+      }
+
       <TodoButtonWrapper>
-        <Button onClick={handleToggleClick}>
+        <Button onClick={handleToggleClick} variant={todo.isDone ? "secondary" : "success"}>
           {todo.isDone ? "未完成" : "已完成"}
-        </Button>
-        <RedButton onClick={handleDeleteClick}>刪除</RedButton>
+        </Button>{" "}
+        <Button variant="danger" onClick={handleDeleteClick}>刪除</Button>
       </TodoButtonWrapper>
     </TodoItemWrapper>
   );
@@ -127,7 +89,6 @@ export default TodoItem;
 
 TodoItem.propTypes = {
   className: PropTypes.string,
-  size: PropTypes.string.isRequired,
   todo: PropTypes.shape({
     id: PropTypes.number,
     content: PropTypes.string,

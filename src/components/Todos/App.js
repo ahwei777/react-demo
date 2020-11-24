@@ -1,81 +1,91 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, memo , useMemo} from "react";
+import "./App.css";
+import React, { memo } from "react";
+import styled from "styled-components";
+import { Container, Button, InputGroup, FormControl } from "react-bootstrap";
 import TodoItem from "./TodoItem";
+import InfoAndFilterBar from "./InfoAndFilterBar";
 import useTodos from "./useTodos";
 
-class Button extends React.Component {
-  render() {
-    console.log('render Button')
-    const { onClick, children } = this.props;
-    return <button onClick={onClick}>{children}</button>
-  }
-}
+const TodoContainer = styled.div`
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+`;
+const Title = memo(styled.div`
+  color: orange;
+  text-align: center;
+  font-size: 60px;
+  font-weight: bold;
+  padding: 20px;
+  margin-bottom: 10px;
+`);
 
-//function Button({ onClick, children}) {
-//  console.log('render button!');
-//  return <button onClick={onClick}>{children}</button>
-//}
-
-function Test({children}) {
-  console.log('render test!')
-  return <div>{children}</div>
-}
-const MemoTest = memo(Test);
-
-function UseMemoTest({ style, children }) {
-  console.log('style render!')
-  return <div style={style}>{children}</div>
-}
-
-function App() {
+function TodosApp() {
   // 引入已打包好的 hooks
   const {
     todos,
-    setTodos,
-    id,
     handleButtonAddTodo,
     handleDeleteTodo,
     handleToggleIsDone,
+    handleUpdateClick,
+    updatingTodo,
+    setUpdatingTodo,
+    updateValue,
+    handleUpdateChange,
     value,
-    setValue,
     handleInputChange,
+    todosFilter,
+    setTodosFilter,
+    handleClearDoneTodos,
   } = useTodos();
 
-  // mount demo
-  useEffect(() => {
-    console.log("mount");
-    return () => {
-      console.log("unmount");
-    };
-  }, []);
-
-  const style = useMemo(() => {
-    console.log('complex calculate')
-    return {
-      color: value ? "red" : "blue"
-    }
-  }, [value])
-
   return (
-    <div className="App">
-      <input
-        type="text"
-        placeholder="todo"
-        value={value}
-        onChange={handleInputChange}
-      />
-      <MemoTest>MemoTest</MemoTest>
-      <UseMemoTest style={style}>useMemoTest</UseMemoTest>
-      <Button onClick={handleButtonAddTodo}>Add todo</Button>
-      {todos.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          handleDeleteTodo={handleDeleteTodo}
-          handleToggleIsDone={handleToggleIsDone}
+    <Container className="my-5">
+      <TodoContainer>
+        <Title>Todo List</Title>
+        {/* 輸入列 */}
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="請輸入待辦事項"
+            value={value}
+            onChange={handleInputChange}
+          />
+          <InputGroup.Append>
+            <Button onClick={handleButtonAddTodo}>送出</Button>
+          </InputGroup.Append>
+        </InputGroup>
+        {/* 資訊及篩選列 */}
+        <InfoAndFilterBar
+          todos={todos}
+          todosFilter={todosFilter}
+          setTodosFilter={setTodosFilter}
+          handleClearDoneTodos={handleClearDoneTodos}
         />
-      ))}
-    </div>
+        {/* Todos */}
+        {todos.map((todo) => {
+          if (todosFilter === "active" && todo.isDone) {
+            return "";
+          }
+          if (todosFilter === "completed" && !todo.isDone) {
+            return "";
+          }
+          return (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              handleDeleteTodo={handleDeleteTodo}
+              handleToggleIsDone={handleToggleIsDone}
+              handleUpdateClick={handleUpdateClick}
+              updatingTodo={updatingTodo}
+              setUpdatingTodo={setUpdatingTodo}
+              updateValue={updateValue}
+              handleUpdateChange={handleUpdateChange}
+            />
+          );
+        })}
+      </TodoContainer>
+    </Container>
   );
 }
 
-export default App;
+export default TodosApp;

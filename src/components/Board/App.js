@@ -18,7 +18,7 @@ const MessageForm = styled.form`
   margin-top: 16px;
 `;
 
-const MesssageTextArea = styled.textarea`
+const MessageTextArea = styled.textarea`
   display: block;
   width: 100%;
 `;
@@ -88,6 +88,7 @@ Message.propTypes = {
 };
 
 function App() {
+  console.log('render app')
   const [messages, setMessages] = useState(null);
   const [apiMessageError, setMessageApiError] = useState(null);
   const [textareaValue, setTextareaValue] = useState();
@@ -96,6 +97,7 @@ function App() {
   const [isLoadingPostMessage, setLoadingPostMessage] = useState(false)
 
   const fetchMessages = () => {
+    console.log('start fetch!')
     return (
       fetch(API_ENDPOINT)
         // 轉為 json 格式
@@ -164,7 +166,7 @@ function App() {
       {isLoadingPostMessage && <Loading>Loading...</Loading>}
       <Title>留言板</Title>
       <MessageForm onSubmit={handleFormSubmit}>
-        <MesssageTextArea
+        <MessageTextArea
           rows={10}
           value={textareaValue}
           onChange={handleTextareaChange}
