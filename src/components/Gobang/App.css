@@ -52,7 +52,7 @@ body {
   position: relative;
 }
 /* 點個眼睛玩玩 */
-.board-row:nth-child(6n + 3) .square-background:nth-child(6n + 3)::after {
+.squares-columns:nth-child(6n + 3) .square-background:nth-child(6n + 3)::after {
   position: absolute;
   content: "";
   width: 8px;

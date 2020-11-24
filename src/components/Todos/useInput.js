@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function useInput() {
   // 初始化輸入框的值
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const handleInputChange = (e) => {
     setValue(e.target.value);
   };
