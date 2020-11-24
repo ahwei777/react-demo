@@ -1,10 +1,8 @@
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import React, {
   memo,
   useMemo,
-  useCallback,
 } from "react";
 
 const InfoAndFilterBar = memo(({
@@ -13,9 +11,7 @@ const InfoAndFilterBar = memo(({
   setTodosFilter,
   handleClearDoneTodos,
 }) => {
-  console.log('render info bar!')
-
-  // 只在 todos 有變化時才計算
+  // 未完成數量：只在 todos 有變化時才計算
   const countResult = useMemo(() => {
     console.log('calculating!')
     let count = 0;
