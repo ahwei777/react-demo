@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
+/* eslint-disable react/prop-types */
+/* eslint-disable import/no-unresolved */
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { getSinglePost } from '../../WebAPI';
 
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-import { getSinglePost } from "../../WebAPI";
-
-const Root = styled.div`
+const Wrapper = styled.div`
+  background: white;
+  opacity: 0.8;
   width: 80%;
-  margin: 0 auto;
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 20px;
 `;
-
 const PostContainer = styled.div`
   padding: 16px;
 `;
@@ -36,7 +33,7 @@ const PostBody = styled.div`
 `;
 
 function Post({ post }) {
-  console.log("render post");
+  console.log('render post');
   return (
     <PostContainer>
       <PostTitle>{post[0].title}</PostTitle>
@@ -47,19 +44,13 @@ function Post({ post }) {
 }
 
 export default function SinglePost() {
+  console.log('render single post');
   // 取得在 Route 中設定的 URL 參數
   const { id } = useParams();
   const [post, setPost] = useState(null);
   // component mount 時執行(初始化)
   useEffect(() => {
-    getSinglePost(id).then((post) => setPost(post));
+    getSinglePost(id).then(newPosts => setPost(newPosts));
   }, []);
-  return <Root>{post && <Post post={post}></Post>}</Root>;
+  return <Wrapper>{post && <Post post={post} />}</Wrapper>;
 }
-
-Post.propTypes = {
-  id: PropTypes.number,
-  createdAt: PropTypes.string,
-  body: PropTypes.string,
-  title: PropTypes.string,
-};

@@ -28,7 +28,7 @@ export default function useTodos() {
     }
     return todoData;
   });
-
+  console.log(todos)
   const [todosFilter, setTodosFilter] = useState(null);
   const [updatingTodo, setUpdatingTodo] = useState(null);
   const [updateValue, setUpdateValue] = useState(null);

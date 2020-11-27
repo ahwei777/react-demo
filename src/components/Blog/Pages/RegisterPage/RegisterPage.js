@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Form, Button, Col, Row,
 } from 'react-bootstrap';
-import { login, getMe } from '../../WebAPI';
+import { getMe, register } from '../../WebAPI';
 import { setAuthToken } from '../../utils';
 import { AuthContext } from '../../context';
 
@@ -22,8 +22,9 @@ const ErrorMessage = styled.div`
   color: red;
 `;
 
-export default function LoginPage() {
-  console.log('render loginPage');
+export default function RegisterPage() {
+  console.log('render RegisterPage');
+  const [nickname, setNickname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState();
@@ -33,11 +34,11 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(username, password).then((res) => {
+    register(nickname, username, password).then((res) => {
       if (res.ok === 0) {
         return setErrorMessage(res.message);
       }
-      // 登入成功將回傳的 token 儲存在 localStorage
+      // 註冊成功將回傳的 token 儲存在 localStorage
       setAuthToken(res.token);
       // 取得該使用者資料
       getMe().then((resp) => {
@@ -60,6 +61,21 @@ export default function LoginPage() {
   return (
     <Wrapper>
       <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formBasicNickname" as={Row}>
+          <Form.Label column sm="4">
+            Nickname
+          </Form.Label>
+          <Col sm="8">
+            <Form.Control
+              type="nickname"
+              placeholder="Enter nickname"
+              value={nickname}
+              onChange={e => setNickname(e.target.value)}
+              onFocus={handleInputFocus}
+            />
+          </Col>
+        </Form.Group>
+
         <Form.Group controlId="formBasicUsername" as={Row}>
           <Form.Label column sm="4">
             Username
@@ -91,7 +107,7 @@ export default function LoginPage() {
         </Form.Group>
 
         <Button variant="primary" size="lg" className="" type="submit">
-          登入
+          註冊
         </Button>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </Form>

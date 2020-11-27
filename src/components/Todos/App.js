@@ -38,7 +38,7 @@ function TodosApp() {
     setTodosFilter,
     handleClearDoneTodos,
   } = useTodos();
-
+  console.log('todos',todos)
   return (
     <Container className="my-5">
       <TodoContainer>

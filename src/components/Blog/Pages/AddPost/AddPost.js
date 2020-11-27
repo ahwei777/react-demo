@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import PropTypes from "prop-types";
+/* eslint-disable import/no-unresolved */
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
+import { addPost } from '../../WebAPI';
 
-import { useHistory } from "react-router-dom";
-
-import { addPost } from "../../WebAPI";
-
-const Root = styled.div`
+const Wrapper = styled.div`
+  background: white;
+  opacity: 0.8;
   width: 80%;
-  margin: 32px auto;
+  border-radius: 10px;
+  margin: 20px auto;
+  padding: 20px;
 `;
-
 const PostForm = styled.form``;
-
 const PostTitle = styled.input`
   padding: 8px;
   font-size: 24px;
@@ -22,7 +23,6 @@ const PostTitle = styled.input`
   border-radius: 8px;
   width: 50%;
 `;
-
 const PostBody = styled.textarea`
   padding: 8px;
   font-size: 16px;
@@ -32,7 +32,6 @@ const PostBody = styled.textarea`
   width: 100%;
   resize: none;
 `;
-
 const PostErrorMessage = styled.div`
   color: red;
   font-weight: bold;
@@ -41,8 +40,8 @@ const PostErrorMessage = styled.div`
 `;
 
 export default function AddPost() {
-  const [titleValue, setTitleValue] = useState("");
-  const [bodyValue, setBodyValue] = useState("");
+  const [titleValue, setTitleValue] = useState('');
+  const [bodyValue, setBodyValue] = useState('');
   const [postError, setPostError] = useState(null);
 
   const history = useHistory();
@@ -56,12 +55,12 @@ export default function AddPost() {
       if (res.ok === 0) {
         return setPostError(res.message);
       }
-      history.push("/");
+      return history.push('/BlogApp');
     });
   };
 
   return (
-    <Root>
+    <Wrapper>
       <PostForm onSubmit={handleFormSubmit}>
         <div>
           <div>文章標題：</div>
@@ -73,7 +72,7 @@ export default function AddPost() {
             onFocus={() => {
               setPostError(null);
             }}
-          ></PostTitle>
+          />
         </div>
         <div>
           <div>文章內容：</div>
@@ -86,18 +85,21 @@ export default function AddPost() {
             onFocus={() => {
               setPostError(null);
             }}
-          ></PostBody>
+          />
         </div>
-        <button>送出</button>
+        <div className="d-flex justify-content-center">
+          <Button variant="primary" size="lg" className="" type="submit">
+            送出
+          </Button>
+        </div>
         {postError && (
-          <PostErrorMessage>新增文章失敗：{postError}</PostErrorMessage>
+          <PostErrorMessage>
+            新增文章失敗：
+            {' '}
+            {postError}
+          </PostErrorMessage>
         )}
       </PostForm>
-    </Root>
+    </Wrapper>
   );
 }
-
-AddPost.propTypes = {
-  body: PropTypes.string,
-  title: PropTypes.string,
-};

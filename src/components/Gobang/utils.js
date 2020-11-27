@@ -9,9 +9,16 @@ function countTotal(currentX, currentY, directionX, directionY, board) {
     tempX += directionX;
     tempY += directionY;
     // 如果下個棋子等於檢查的顏色
-    if (board[tempY][tempX] === now) {
-      // 連續的棋子數 + 1
-      total++;
+    if (tempX <= 18 && tempX >= 0 && tempY >= 0 && tempY <= 18 ) {
+      if (board[tempY][tempX] === now) {
+        console.log("tempY", tempY)
+        console.log("tempX", tempX)
+        console.log(board[tempY][tempX])
+        // 連續的棋子數 + 1
+        total++;
+      } else {
+        break;
+      }
     } else {
       break;
     }
