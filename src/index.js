@@ -10,7 +10,7 @@ import BoardApp from './components/Board/App'
 // week21
 import TodosApp from "./components/Todos/App";
 import GobangApp from "./components/Gobang/App";
-//  import FormApp from "./components/Form/App";
+import FormApp from "./components/Form/App";
 // week22
 import BlogApp from './components/Blog/App';
 
@@ -23,10 +23,13 @@ ReactDOM.render(
         <BlogApp />
       </Route>
       <Route exact path="/TodosApp">
-        <GobangApp />
+        <TodosApp />
       </Route>
       <Route exact path="/GobangApp">
         <GobangApp />
+      </Route>
+      <Route exact path="/FormApp">
+        <FormApp />
       </Route>
       <Route path="/BlogApp">
         <BlogApp />
