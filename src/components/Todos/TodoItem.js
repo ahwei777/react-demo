@@ -47,6 +47,7 @@ const TodoItem = ({
   handleUpdateClick,
   updateValue,
   handleUpdateChange,
+  editingInput
 }) => {
   const handleToggleClick = () => {
     handleToggleIsDone(todo.id);
@@ -68,7 +69,7 @@ const TodoItem = ({
           onBlur={() => {
             setUpdatingTodo(false);
           }}
-          className={"editing"}
+          ref={editingInput}
         ></TodoContentEditing>
       ) : (
         <TodoContent

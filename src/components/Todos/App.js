@@ -37,6 +37,7 @@ function TodosApp() {
     todosFilter,
     setTodosFilter,
     handleClearDoneTodos,
+    editingInput
   } = useTodos();
   console.log('todos',todos)
   return (
@@ -80,6 +81,7 @@ function TodosApp() {
               setUpdatingTodo={setUpdatingTodo}
               updateValue={updateValue}
               handleUpdateChange={handleUpdateChange}
+              editingInput={editingInput}
             />
           );
         })}

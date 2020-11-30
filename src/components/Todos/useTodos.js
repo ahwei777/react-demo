@@ -32,6 +32,7 @@ export default function useTodos() {
   const [todosFilter, setTodosFilter] = useState(null);
   const [updatingTodo, setUpdatingTodo] = useState(null);
   const [updateValue, setUpdateValue] = useState(null);
+  const editingInput = useRef(null);
 
   // useEffect 第一個參數為函式，當第二個參數關注目標改變時才會執行(傳入[]時因不會改變故只在第一次 render 後執行，如 call API)
 
@@ -46,7 +47,7 @@ export default function useTodos() {
   useEffect(() => {
     // 將輸入游標移到該 DOM 元素
     if (updatingTodo) {
-      document.querySelector(".editing").focus();
+      editingInput.current.focus();
     }
   }, [updatingTodo]);
 
@@ -126,5 +127,6 @@ export default function useTodos() {
     todosFilter,
     setTodosFilter,
     handleClearDoneTodos,
+    editingInput
   };
 }
