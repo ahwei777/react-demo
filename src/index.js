@@ -13,9 +13,14 @@ import GobangApp from "./components/Gobang/App";
 import FormApp from "./components/Form/App";
 // week22
 import BlogApp from './components/Blog/App';
+// week23
+import TodosRedux from './components/Todos-redux/App';
+import { Provider } from 'react-redux';
+import store from './components/Todos-redux/redux/store'
 
 // <React.StrictMode> 嚴格模式可能會造成偵錯問題，可先取消
 ReactDOM.render(
+  <Provider store={store}>
   <Router>
     <Switch>
       {/* blog 下層會再使用 router ，此層不可設為 exact，因會由上往下逐層篩選 */}
@@ -34,7 +39,11 @@ ReactDOM.render(
       <Route path="/BlogApp">
         <BlogApp />
       </Route>
+      <Route exact path="/TodosRedux">
+        <TodosRedux />
+      </Route>
     </Switch>
-  </Router>,
+  </Router>
+  </Provider>,
   document.getElementById('root'),
 );

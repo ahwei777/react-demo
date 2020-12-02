@@ -73,10 +73,11 @@ export default function useTodos() {
   const handleToggleIsDone = (id) => {
     setTodos(
       todos.map((todo) => {
-        // 不符合指定刪除 ID 的保留
+        // 不符合 ID 的保留
         if (todo.id !== id) return todo;
         return {
           ...todo,
+          // 符合 ID 的變換狀態
           isDone: !todo.isDone,
         };
       })
