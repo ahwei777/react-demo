@@ -1,13 +1,14 @@
 /* eslint-disable import/no-unresolved */
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import {
   Form, Button, Col, Row,
 } from 'react-bootstrap';
-import { getMe, register } from '../../WebAPI';
-import { setAuthToken } from '../../utils';
-import { AuthContext } from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { Default as RegisteringLoader } from 'react-awesome-spinners';
+import { register } from '../../../redux/reducers/userReducer';
+import { setErrorMessage } from '../../../redux/reducers/errorMessageReducer';
 
 const Wrapper = styled.div`
   text-align: center;
@@ -18,49 +19,38 @@ const Wrapper = styled.div`
   border-radius: 10px;
   padding: 50px 20px;
 `;
-const ErrorMessage = styled.div`
-  color: red;
-  font-weight: bold;
-  font-size: 36px;
-  text-align: center;
-  margin-top: 1rem;
-`;
 
 export default function RegisterPage() {
-  console.log('render RegisterPage');
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  //  input 狀態存在 component 內
   const [nickname, setNickname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState();
-  const history = useHistory();
-  // 取出上層 contextProvider 提供的 context
-  const { setUser } = useContext(AuthContext);
 
+  // 引入 store 內的 state
+  const isRegistering = useSelector(store => store.user.isRegistering);
+  const userData = useSelector(store => store.user.data);
+  const errorMessage = useSelector(store => store.error.errorMessage);
+  console.log('render registerPage');
+  console.log('errorMessage', errorMessage);
+  //  點擊送出表單 call dispatch
   const handleSubmit = (e) => {
     e.preventDefault();
-    register(nickname, username, password).then((res) => {
-      if (res.ok === 0) {
-        return setErrorMessage(res.message);
-      }
-      // 註冊成功將回傳的 token 儲存在 localStorage
-      setAuthToken(res.token);
-      // 取得該使用者資料
-      getMe().then((resp) => {
-        if (resp.ok !== 1) {
-          // 此 token 查詢帳號資料失敗：清掉 token 後顯示錯誤訊息
-          setAuthToken(null);
-          return setErrorMessage(resp.message);
-        }
-        // 查詢資料成功，將回傳的帳號資料(物件)存入 user
-        setUser(resp.data);
-        return history.push('/BlogApp');
-      });
-      return true;
-    });
+    dispatch(register(nickname, username, password));
   };
+  //  重新輸入時清掉錯誤訊息
   const handleInputFocus = () => {
-    setErrorMessage(null);
+    dispatch(setErrorMessage(null));
   };
+
+  useEffect(() => {
+    //  監聽 userData，當註冊成功後會更新 userData，再導至首頁
+    if (userData) {
+      history.push('/BlogAppRedux/');
+    }
+  }, [dispatch, userData, history]);
 
   return (
     <Wrapper>
@@ -102,18 +92,25 @@ export default function RegisterPage() {
           <Col sm="8">
             <Form.Control
               type="password"
-              placeholder="Password"
+              placeholder="Enter Password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               onFocus={handleInputFocus}
             />
           </Col>
         </Form.Group>
-
-        <Button variant="primary" size="lg" className="" type="submit">
-          註冊
-        </Button>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {/* 註冊 Loader */}
+        {isRegistering && (
+          <div className="d-flex justify-content-center">
+            <RegisteringLoader />
+          </div>
+        )}
+        {/* 註冊按鈕在 call API 期間隱藏 */}
+        {!isRegistering && (
+          <Button variant="primary" size="lg" className="" type="submit">
+            註冊
+          </Button>
+        )}
       </Form>
     </Wrapper>
   );

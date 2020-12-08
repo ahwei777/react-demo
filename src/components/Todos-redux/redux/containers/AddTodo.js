@@ -18,7 +18,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 // const mapDispatchToProps = { addTodo }
 
-// Higher Order Component: 將原 component 與 redux 串接起來，因為知道 redux 的存在也被稱作 smart component, container
+// Higher Order Component: 將原 component 與 redux 串接起來，因為是實際與 redux 互動串聯的元件，故也被稱作 smart component, container
 
 //  const connectToStore = connect(mapStateToProps, mapDispatchToProps);
 //  const ConnectedAddTodo = connectToStore(AddTodo);

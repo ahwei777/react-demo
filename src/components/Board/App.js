@@ -61,12 +61,7 @@ const Loading = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 30px;
-  display: flex;
-  aligin-items: center;
-  justify-content: center;
+  background: darkslategrey;
 `
 
 function Message({ author, time, children }) {
