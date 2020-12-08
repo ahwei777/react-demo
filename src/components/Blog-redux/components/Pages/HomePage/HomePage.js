@@ -2,15 +2,15 @@
 /* eslint-disable import/no-unresolved */
 import React, { useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPost, setAllPostData } from '../../../redux/reducers/postReducer';
+import { getPost, setAllPostData, selectIsGettingPost, selectAllPostData } from '../../../redux/reducers/postReducer';
 import Wrapper from '../../templates/Wrapper';
 import Post from '../../templates/Post';
 import PostLoadingBackground from '../../Loaders/LoopCircleLoading';
 
 function HomePage() {
   const dispatch = useDispatch();
-  const isGettingPost = useSelector(store => store.posts.isGettingPost);
-  const allPostData = useSelector(store => store.posts.allPostData);
+  const isGettingPost = useSelector(selectIsGettingPost);
+  const allPostData = useSelector(selectAllPostData);
 
   // component mount 時執行(初始化)
   useEffect(() => {

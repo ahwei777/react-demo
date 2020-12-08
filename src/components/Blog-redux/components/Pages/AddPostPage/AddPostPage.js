@@ -6,8 +6,10 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addPost,
-  setAddPostResponse,
+  selectAddPostResponse,
+  selectIsAddingPost,
 } from '../../../redux/reducers/postReducer';
+import { setErrorMessage } from '../../../redux/reducers/errorMessageReducer';
 import usePrevious from '../../../hooks/usePrevious';
 
 const Wrapper = styled.div`
@@ -52,8 +54,8 @@ export default function AddPost() {
 
   const dispatch = useDispatch();
   // 從 store 中取得 state
-  const addPostResponse = useSelector(store => store.posts.addPostResponse);
-  const isAddingPost = useSelector(store => store.posts.isAddingPost);
+  const addPostResponse = useSelector(selectAddPostResponse);
+  const isAddingPost = useSelector(selectIsAddingPost);
   const prevIsAddingPost = usePrevious(isAddingPost);
 
   const handleFormSubmit = (e) => {
@@ -86,7 +88,7 @@ export default function AddPost() {
               setTitleValue(e.target.value);
             }}
             onFocus={() => {
-              setAddPostResponse(null);
+              dispatch(setErrorMessage(null));
             }}
           />
         </div>
@@ -99,7 +101,7 @@ export default function AddPost() {
               setBodyValue(e.target.value);
             }}
             onFocus={() => {
-              setAddPostResponse(null);
+              dispatch(setErrorMessage(null));
             }}
           />
         </div>

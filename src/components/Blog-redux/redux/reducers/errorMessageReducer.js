@@ -19,6 +19,6 @@ export const errorMessageSlice = createSlice({
 export const { setErrorMessage } = errorMessageSlice.actions;
 
 // selector
-// export const selectCount = (state) => state.counter.value;
+export const selectErrorMessage = store => store.error.errorMessage;
 
 export default errorMessageSlice.reducer;

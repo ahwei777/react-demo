@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Default as LoggingLoader } from 'react-awesome-spinners';
-import { login } from '../../../redux/reducers/userReducer';
+import { login, selectUserData, selectIsLogging } from '../../../redux/reducers/userReducer';
 import { setErrorMessage } from '../../../redux/reducers/errorMessageReducer';
 
 const Wrapper = styled.div`
@@ -29,8 +29,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
 
   // 引入 store 內的 state
-  const isLogging = useSelector(store => store.user.isLogging);
-  const userData = useSelector(store => store.user.data);
+  const isLogging = useSelector(selectIsLogging);
+  const userData = useSelector(selectUserData);
 
   //  點擊送出表單 call dispatch
   const handleSubmit = (e) => {

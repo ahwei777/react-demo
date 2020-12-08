@@ -9,15 +9,18 @@ import PaginationWrapper from '../../templates/PaginationWrapper';
 import {
   getPost,
   setByPagePostData,
+  selectIsGettingPost,
+  selectByPagePostData,
+  selectTotalPostCount,
 } from '../../../redux/reducers/postReducer';
 import PostLoadingBackground from '../../Loaders/LoopCircleLoading';
 
 function PaginationPage() {
   const { page } = useParams();
   const dispatch = useDispatch();
-  const isGettingPost = useSelector(store => store.posts.isGettingPost);
-  const byPagePostData = useSelector(store => store.posts.byPagePostData);
-  const totalPostsCount = useSelector(store => store.posts.totalPostsCount);
+  const isGettingPost = useSelector(selectIsGettingPost);
+  const byPagePostData = useSelector(selectByPagePostData);
+  const totalPostsCount = useSelector(selectTotalPostCount);
 
   // page 更新時拿新資料
   useEffect(() => {
@@ -34,7 +37,7 @@ function PaginationPage() {
       {!isGettingPost && byPagePostData && byPagePostData.length > 0 && (
         <Wrapper>
           {/* post */}
-          {byPagePostData.map(post => (
+          {byPagePostData.map((post) => (
             <Post key={post.id} post={post} />
           ))}
           {/* 分頁按鈕列 */}

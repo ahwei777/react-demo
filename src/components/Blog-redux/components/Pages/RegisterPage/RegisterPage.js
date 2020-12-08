@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Default as RegisteringLoader } from 'react-awesome-spinners';
-import { register } from '../../../redux/reducers/userReducer';
+import { register, selectIsRegistering, selectUserData } from '../../../redux/reducers/userReducer';
 import { setErrorMessage } from '../../../redux/reducers/errorMessageReducer';
 
 const Wrapper = styled.div`
@@ -30,11 +30,9 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
 
   // 引入 store 內的 state
-  const isRegistering = useSelector(store => store.user.isRegistering);
-  const userData = useSelector(store => store.user.data);
-  const errorMessage = useSelector(store => store.error.errorMessage);
-  console.log('render registerPage');
-  console.log('errorMessage', errorMessage);
+  const isRegistering = useSelector(selectIsRegistering);
+  const userData = useSelector(selectUserData);
+
   //  點擊送出表單 call dispatch
   const handleSubmit = (e) => {
     e.preventDefault();

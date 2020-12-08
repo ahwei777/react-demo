@@ -10,8 +10,8 @@ import {
   MEDIA_QUERY_MOBILE_L,
   MEDIA_QUERY_TABLET,
 } from '../../../../constants/breakpoint';
-import { setErrorMessage } from '../../redux/reducers/errorMessageReducer';
-import { setUser } from '../../redux/reducers/userReducer';
+import { setErrorMessage, selectErrorMessage } from '../../redux/reducers/errorMessageReducer';
+import { setUserData, selectUserData, selectIsGettingUserData } from '../../redux/reducers/userReducer';
 import { setAuthToken } from '../../utils';
 
 const HeaderContainer = styled.div`
@@ -126,11 +126,9 @@ export default function Header() {
   const history = useHistory();
   const { pathname } = useLocation();
   // 取得當下 user 的狀態(未登入:null, 已登入：帳號資料物件)
-  const userData = useSelector(store => store.user.data);
-  const errorMessage = useSelector(store => store.error.errorMessage);
-  const isGettingUserData = useSelector(
-    store => store.user.isGettingUserData,
-  );
+  const userData = useSelector(selectUserData);
+  const errorMessage = useSelector(selectErrorMessage);
+  const isGettingUserData = useSelector(selectIsGettingUserData);
 
   //  當路徑改變時先將錯誤訊息清空
   useEffect(
@@ -143,7 +141,7 @@ export default function Header() {
   const handleLogout = () => {
     // 登出清空 Token 及 user
     setAuthToken('');
-    dispatch(setUser(null));
+    dispatch(setUserData(null));
   };
   return (
     <>

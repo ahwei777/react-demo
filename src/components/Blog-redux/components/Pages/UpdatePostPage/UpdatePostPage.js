@@ -10,6 +10,10 @@ import {
   setSinglePostData,
   updatePost,
   setUpdatePostResponse,
+  selectIsGettingPost,
+  selectSinglePostData,
+  selectUpdatePostResponse,
+  selectIsUpdatingPost,
 } from '../../../redux/reducers/postReducer';
 import usePrevious from '../../../hooks/usePrevious';
 import PostLoadingBackground from '../../Loaders/LoopCircleLoading';
@@ -59,19 +63,18 @@ export default function AddPost() {
   // 取得在 Route 中設定的 URL 參數
   const { id } = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
+
   // 從 store 中取得 state
-  const isGettingPost = useSelector(store => store.posts.isGettingPost);
-  const singlePostData = useSelector(store => store.posts.singlePostData);
-  const updatePostResponse = useSelector(
-    store => store.posts.updatePostResponse,
-  );
-  console.log('updatePostResponse', updatePostResponse);
-  const isUpdatingPost = useSelector(store => store.posts.isUpdatingPost);
+  const isGettingPost = useSelector(selectIsGettingPost);
+  const singlePostData = useSelector(selectSinglePostData);
+  const updatePostResponse = useSelector(selectUpdatePostResponse);
+  const isUpdatingPost = useSelector(selectIsUpdatingPost);
   const prevIsUpdatingPost = usePrevious(isUpdatingPost);
 
+  // input 放在 component state
   const [titleValue, setTitleValue] = useState('');
   const [bodyValue, setBodyValue] = useState('');
-  const history = useHistory();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -88,12 +91,12 @@ export default function AddPost() {
     dispatch(getPost('single', id));
     // clean up function when dependencies change and component unmount
     return () => {
-      console.log('useLayoutEffect clean up singlePostData');
       dispatch(setSinglePostData(null));
     };
   }, [dispatch, id]);
 
   useEffect(() => {
+    //  收到回傳文章時將資料放入
     if (singlePostData && singlePostData.length > 0) {
       setTitleValue(singlePostData[0].title);
       setBodyValue(singlePostData[0].body);
@@ -120,57 +123,60 @@ export default function AddPost() {
 
   return (
     <>
-      {isGettingPost && (<PostLoadingBackground />)}
+      {isGettingPost && <PostLoadingBackground />}
       {!isGettingPost && singlePostData && (
-      <Wrapper>
-        {singlePostData && singlePostData.length === 0 && (
-          <ErrorMessage>編輯的文章不存在</ErrorMessage>
-        )}
-        {singlePostData && singlePostData.length > 0 && (
-          <PostForm onSubmit={handleFormSubmit}>
-            <div>
-              <div>文章標題：</div>
-              <PostTitle
-                value={titleValue}
-                onChange={(e) => {
-                  setTitleValue(e.target.value);
-                }}
-                onFocus={() => {
-                  setUpdatePostResponse(null);
-                }}
-              />
-            </div>
-            <div>
-              <div>文章內容：</div>
-              <PostBody
-                rows={6}
-                value={bodyValue}
-                onChange={(e) => {
-                  setBodyValue(e.target.value);
-                }}
-                onFocus={() => {
-                  setUpdatePostResponse(null);
-                }}
-              />
-            </div>
-            <div className="d-flex justify-content-center">
-              {isUpdatingPost && <UpdatingLoader />}
-              {!isUpdatingPost && (
-                <Button variant="primary" size="lg" className="" type="submit">
-                  更新
-                </Button>
+        <Wrapper>
+          {singlePostData && singlePostData.length === 0 && (
+            <ErrorMessage>編輯的文章不存在</ErrorMessage>
+          )}
+          {singlePostData && singlePostData.length > 0 && (
+            <PostForm onSubmit={handleFormSubmit}>
+              <div>
+                <div>文章標題：</div>
+                <PostTitle
+                  value={titleValue}
+                  onChange={(e) => {
+                    setTitleValue(e.target.value);
+                  }}
+                  onFocus={() => {
+                    setUpdatePostResponse(null);
+                  }}
+                />
+              </div>
+              <div>
+                <div>文章內容：</div>
+                <PostBody
+                  rows={6}
+                  value={bodyValue}
+                  onChange={(e) => {
+                    setBodyValue(e.target.value);
+                  }}
+                  onFocus={() => {
+                    setUpdatePostResponse(null);
+                  }}
+                />
+              </div>
+              <div className="d-flex justify-content-center">
+                {isUpdatingPost && <UpdatingLoader />}
+                {!isUpdatingPost && (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className=""
+                    type="submit"
+                  >
+                    更新
+                  </Button>
+                )}
+              </div>
+              {updatePostResponse && updatePostResponse.ok === 0 && (
+                <AddPostErrorMessage>
+                  編輯文章失敗： {updatePostResponse.message}
+                </AddPostErrorMessage>
               )}
-            </div>
-            {updatePostResponse && updatePostResponse.ok === 0 && (
-              <AddPostErrorMessage>
-                編輯文章失敗：
-                {' '}
-                {updatePostResponse.message}
-              </AddPostErrorMessage>
-            )}
-          </PostForm>
-        )}
-      </Wrapper>
+            </PostForm>
+          )}
+        </Wrapper>
       )}
     </>
   );

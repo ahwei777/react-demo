@@ -20,7 +20,6 @@ function BlogAppRedux() {
 
   // 只在初次 render App 時確認身分
   useEffect(() => {
-    console.log('useEffect in first render');
     dispatch(getUserData());
   }, [dispatch]);
 
