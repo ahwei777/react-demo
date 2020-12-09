@@ -54,6 +54,10 @@ function BlogAppRedux() {
         <Route exact path="/BlogAppRedux/update-post/:id">
           <UpdatePostPage />
         </Route>
+        {/* 沒被上面攔截的其他網址都導至首頁 */}
+        <Route path="/">
+          <HomePage />
+        </Route>
       </Switch>
     </Router>
   );

@@ -193,7 +193,7 @@ export default function Header() {
                   >
                     發布文章
                   </Nav>
-                  <Nav onClick={handleLogout} to="/BlogAppRedux">
+                  <Nav onClick={handleLogout} to="/">
                     登出
                   </Nav>
                 </>

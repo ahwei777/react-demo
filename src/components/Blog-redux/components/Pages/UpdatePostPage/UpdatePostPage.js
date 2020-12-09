@@ -15,8 +15,10 @@ import {
   selectUpdatePostResponse,
   selectIsUpdatingPost,
 } from '../../../redux/reducers/postReducer';
+import { userData, selectUserData } from '../../../redux/reducers/userReducer';
 import usePrevious from '../../../hooks/usePrevious';
 import PostLoadingBackground from '../../Loaders/LoopCircleLoading';
+import { setErrorMessage } from '../../../redux/reducers/errorMessageReducer';
 
 const Wrapper = styled.div`
   background: white;
@@ -71,6 +73,8 @@ export default function AddPost() {
   const updatePostResponse = useSelector(selectUpdatePostResponse);
   const isUpdatingPost = useSelector(selectIsUpdatingPost);
   const prevIsUpdatingPost = usePrevious(isUpdatingPost);
+  // 權限驗證
+  const userData = useSelector(selectUserData);
 
   // input 放在 component state
   const [titleValue, setTitleValue] = useState('');
@@ -87,13 +91,17 @@ export default function AddPost() {
   };
 
   // 當 id 改變時就呼叫 redux thunk 協助 call API
-  useLayoutEffect(() => {
+  useEffect(() => {
+    // 權限管理
+    if (!userData) {
+      return dispatch(setErrorMessage('您無權限操作，請先登入'))
+    }
     dispatch(getPost('single', id));
     // clean up function when dependencies change and component unmount
     return () => {
       dispatch(setSinglePostData(null));
     };
-  }, [dispatch, id]);
+  }, [dispatch, id, userData]);
 
   useEffect(() => {
     //  收到回傳文章時將資料放入
@@ -124,7 +132,7 @@ export default function AddPost() {
   return (
     <>
       {isGettingPost && <PostLoadingBackground />}
-      {!isGettingPost && singlePostData && (
+      {userData && !isGettingPost && singlePostData && (
         <Wrapper>
           {singlePostData && singlePostData.length === 0 && (
             <ErrorMessage>編輯的文章不存在</ErrorMessage>

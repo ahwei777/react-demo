@@ -74,7 +74,6 @@ export const updatePostAPI = (id, data) => {
   return fetch(`${BASE_URL}/posts/${id}`, {
     method: 'PATCH',
     headers: {
-      authorization: `Bearer ${token}`,
       'content-type': 'application/json',
     },
     body: JSON.stringify(data),
