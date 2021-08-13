@@ -1,13 +1,11 @@
 /* eslint-disable import/no-unresolved */
-import React, { useState, useContext } from 'react';
-import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
-import {
-  Form, Button, Col, Row,
-} from 'react-bootstrap';
-import { login, getMe } from '../../WebAPI';
-import { setAuthToken } from '../../utils';
-import { AuthContext } from '../../context';
+import React, { useState, useContext } from "react";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+import { Form, Button, Col, Row } from "react-bootstrap";
+import { login, getMe } from "../../WebAPI";
+import { setAuthToken } from "../../utils";
+import { AuthContext } from "../../context";
 
 const Wrapper = styled.div`
   text-align: center;
@@ -22,10 +20,10 @@ const ErrorMessage = styled.div`
   color: red;
 `;
 
-export default function LoginPage() {
-  console.log('render loginPage');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+export default function LoginPage({ setLoggedIn }) {
+  console.log("render loginPage");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState();
   const history = useHistory();
   // 取出上層 contextProvider 提供的 context
@@ -48,7 +46,7 @@ export default function LoginPage() {
         }
         // 查詢資料成功，將回傳的帳號資料(物件)存入 user
         setUser(resp.data);
-        return history.push('/BlogApp');
+        return history.push("/BlogApp");
       });
       return true;
     });
@@ -69,7 +67,7 @@ export default function LoginPage() {
               type="username"
               placeholder="Enter username"
               value={username}
-              onChange={e => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               onFocus={handleInputFocus}
             />
           </Col>
@@ -84,13 +82,20 @@ export default function LoginPage() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               onFocus={handleInputFocus}
             />
           </Col>
         </Form.Group>
 
-        <Button variant="primary" size="lg" className="" type="submit">
+        <Button
+          variant="primary"
+          size="lg"
+          className=""
+          onClick={() => {
+            setLoggedIn(true);
+          }}
+        >
           登入
         </Button>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}

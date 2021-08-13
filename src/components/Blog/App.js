@@ -1,22 +1,27 @@
 /* eslint-disable import/no-unresolved */
-import './App.css';
-import React, { useEffect, useState } from 'react';
+import "./App.css";
+import React, { useEffect, useState } from "react";
 // import PropTypes from 'prop-types';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
-import Header from './Header';
-import HomePage from './Pages/HomePage';
-import LoginPage from './Pages/LoginPage';
-import RegisterPage from './Pages/RegisterPage';
-import SinglePost from './Pages/SinglePost';
-import AddPost from './Pages/AddPost';
-import AboutPage from './Pages/AboutPage';
-import PaginationPage from './Pages/PaginationPage';
-import { AuthContext } from './context';
-import { getMe } from './WebAPI';
-import { setAuthToken, getAuthToken } from './utils';
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import Header from "./Header";
+import HomePage from "./Pages/HomePage";
+import LoginPage from "./Pages/LoginPage";
+import RegisterPage from "./Pages/RegisterPage";
+import SinglePost from "./Pages/SinglePost";
+import AddPost from "./Pages/AddPost";
+import AboutPage from "./Pages/AboutPage";
+import PaginationPage from "./Pages/PaginationPage";
+import { AuthContext } from "./context";
+import { getMe } from "./WebAPI";
+import { setAuthToken, getAuthToken } from "./utils";
 
 function BlogApp() {
-  console.log('render BlogApp');
+  console.log("render BlogApp");
   // 登入狀態
 
   // user 預設值會先被 render 出來
@@ -24,7 +29,7 @@ function BlogApp() {
 
   // 每次 mount 時先確認登入狀態，檢查 local storage 內有無 token，有的話再以 getMe 確認身分
   useEffect(() => {
-    console.log('useEffect in first render');
+    console.log("useEffect in first render");
     // 沒 token 直接 return
     if (!getAuthToken()) {
       setUser(false);
@@ -32,17 +37,18 @@ function BlogApp() {
     }
     getMe().then((res) => {
       if (res.ok !== 1) {
-        console.log('no ok');
+        console.log("no ok");
         // 此 token 查詢帳號資料失敗：清掉 token 後顯示錯誤訊息
-        setAuthToken('');
+        setAuthToken("");
         setUser(false);
         return;
         // return setErrorMessage(res.message);
       }
-      console.log('ok');
+      console.log("ok");
       setUser(res.data);
     });
   }, []);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
@@ -59,7 +65,7 @@ function BlogApp() {
             <AboutPage />
           </Route>
           <Route exact path="/BlogApp/login">
-            <LoginPage />
+            {loggedIn ? <Redirect to="/BlogApp/welcome" /> : <LoginPage setLoggedIn={setLoggedIn}/>}
           </Route>
           <Route exact path="/BlogApp/register">
             <RegisterPage />
@@ -72,6 +78,11 @@ function BlogApp() {
           </Route>
           <Route exact path="/BlogApp/new-post">
             <AddPost />
+          </Route>
+          <Route exact path="/BlogApp/welcome">
+            <h1>
+              Welcome!
+            </h1>
           </Route>
         </Switch>
       </Router>
